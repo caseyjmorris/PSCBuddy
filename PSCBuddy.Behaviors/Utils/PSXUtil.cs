@@ -47,7 +47,7 @@ namespace PSCBuddy.Behaviors.Utils
         File.WriteAllText(cueFile, cueFileText);
       }
 
-      var chdLoc = this.MakeCHD(chdmanPath, cueFile);
+      var chdLoc = this.MakeCHD(chdmanPath, cueFile, logConsoleOutput);
       var targetLoc = Path.Combine(targetDirectory, Path.GetFileName(chdLoc));
 
       File.Move(chdLoc, targetLoc);
@@ -165,7 +165,7 @@ namespace PSCBuddy.Behaviors.Utils
       return Path.Combine(wd, clean);
     }
 
-    private string MakeCHD(string chdmanPath, string cuePath)
+    private string MakeCHD(string chdmanPath, string cuePath, Action<string> logConsoleOutput)
     {
       if (!File.Exists(chdmanPath))
       {
@@ -178,6 +178,8 @@ namespace PSCBuddy.Behaviors.Utils
 
       var wd = Path.GetDirectoryName(cuePath);
       var chdFile = GetScrubbedFileName(cuePath) + ".chd";
+      var fullpath = Path.Combine(wd, chdFile);
+      var cueFile = Path.GetFileName(cuePath);
 
       Debug.Assert(wd != null, "wd != null");
 
@@ -186,12 +188,19 @@ namespace PSCBuddy.Behaviors.Utils
         WorkingDirectory = wd,
         FileName = chdmanPath,
         WindowStyle = ProcessWindowStyle.Hidden,
-        Arguments = $"createcd -i \"{cuePath}\" -o \"{chdFile}\"",
+        Arguments = $"createcd -i \"{cueFile}\" -o \"{chdFile}\"",
+        UseShellExecute = false,
+        RedirectStandardError = true,
+        RedirectStandardOutput = true,
       };
 
       var process = Process.Start(psi);
+      process.OutputDataReceived += (sender, args) => logConsoleOutput(args.Data);
+      process.ErrorDataReceived += (sender, args) => logConsoleOutput(args.Data);
+      process.BeginOutputReadLine();
+      process.BeginErrorReadLine();
       process?.WaitForExit();
-      var fullpath = Path.Combine(wd, chdFile);
+
 
       if (!File.Exists(fullpath))
       {

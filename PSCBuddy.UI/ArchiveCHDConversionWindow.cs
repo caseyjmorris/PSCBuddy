@@ -20,6 +20,7 @@ namespace PSCBuddy.UI
     {
       this.InitializeComponent();
       this.presenter = new ArchiveCHDConversionPresenter(this);
+      CheckForIllegalCrossThreadCalls = false;
     }
 
     public string CHDManPath
