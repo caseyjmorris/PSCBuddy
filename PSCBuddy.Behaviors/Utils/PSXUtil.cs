@@ -103,7 +103,7 @@ namespace PSCBuddy.Behaviors.Utils
         else
         {
           sb.AppendLine($"FILE \"{tracks[i]}\" BINARY")
-            .AppendLine($"  TRACK {i:D2} AUDIO")
+            .AppendLine($"  TRACK {i + 1:D2} AUDIO")
             .AppendLine("    INDEX 00 00:00:00")
             .AppendLine("    INDEX 01 00:02:00");
         }
@@ -152,10 +152,11 @@ namespace PSCBuddy.Behaviors.Utils
       };
 
       var process = Process.Start(psi);
-      process?.WaitForExit();
-
-      logConsoleOutput(process.StandardOutput.ReadToEnd());
-      logConsoleOutput(process.StandardError.ReadToEnd());
+      process.OutputDataReceived += (sender, args) => logConsoleOutput(args.Data);
+      process.ErrorDataReceived += (sender, args) => logConsoleOutput(args.Data);
+      process.BeginOutputReadLine();
+      process.BeginErrorReadLine();
+      process.WaitForExit();
 
       if (!Directory.Exists(Path.Combine(wd, clean)))
       {
@@ -199,7 +200,7 @@ namespace PSCBuddy.Behaviors.Utils
       process.ErrorDataReceived += (sender, args) => logConsoleOutput(args.Data);
       process.BeginOutputReadLine();
       process.BeginErrorReadLine();
-      process?.WaitForExit();
+      process.WaitForExit();
 
 
       if (!File.Exists(fullpath))
