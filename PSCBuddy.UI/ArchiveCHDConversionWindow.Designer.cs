@@ -44,6 +44,7 @@
       this.btn7z = new System.Windows.Forms.Button();
       this.btnArchive = new System.Windows.Forms.Button();
       this.btnSaveTo = new System.Windows.Forms.Button();
+      this.txtOutput = new System.Windows.Forms.TextBox();
       this.SuspendLayout();
       // 
       // txtCHDManLoc
@@ -188,11 +189,23 @@
       this.btnSaveTo.UseVisualStyleBackColor = true;
       this.btnSaveTo.Click += new System.EventHandler(this.btnSaveTo_Click);
       // 
+      // txtOutput
+      // 
+      this.txtOutput.Font = new System.Drawing.Font("MS Gothic", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.txtOutput.Location = new System.Drawing.Point(15, 224);
+      this.txtOutput.Multiline = true;
+      this.txtOutput.Name = "txtOutput";
+      this.txtOutput.ReadOnly = true;
+      this.txtOutput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+      this.txtOutput.Size = new System.Drawing.Size(934, 361);
+      this.txtOutput.TabIndex = 16;
+      // 
       // ArchiveCHDConversionWindow
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(961, 232);
+      this.ClientSize = new System.Drawing.Size(961, 597);
+      this.Controls.Add(this.txtOutput);
       this.Controls.Add(this.btnSaveTo);
       this.Controls.Add(this.btnArchive);
       this.Controls.Add(this.btn7z);
@@ -234,6 +247,7 @@
     private System.Windows.Forms.Button btn7z;
     private System.Windows.Forms.Button btnArchive;
     private System.Windows.Forms.Button btnSaveTo;
+    private System.Windows.Forms.TextBox txtOutput;
   }
 }
 

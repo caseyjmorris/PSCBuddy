@@ -10,13 +10,13 @@ namespace PSCBuddy.Behaviors.Utils
   public class PSXUtil
   {
     public string ArchiveToCHD(string chdmanPath, string sevenZPath, string archivePath, bool forceCueCreate,
-      string targetDirectory, bool cleanup)
+      string targetDirectory, bool cleanup, Action<string> logConsoleOutput)
     {
       if (!Directory.Exists(targetDirectory))
       {
         throw new ArgumentException("Directory does not exist", nameof(targetDirectory));
       }
-      var unzipped = this.Extract7zArchive(sevenZPath, archivePath);
+      var unzipped = this.Extract7zArchive(sevenZPath, archivePath, logConsoleOutput);
 
       var cueCandidates = this.FindCueFiles(unzipped).ToArray();
       var cueFile = string.Empty;
@@ -112,7 +112,7 @@ namespace PSCBuddy.Behaviors.Utils
       return sb.ToString();
     }
 
-    private string Extract7zArchive(string executablePath, string archivePath)
+    private string Extract7zArchive(string executablePath, string archivePath, Action<string> logConsoleOutput)
     {
       if (!File.Exists(executablePath))
       {
@@ -145,18 +145,24 @@ namespace PSCBuddy.Behaviors.Utils
         WorkingDirectory = wd,
         FileName = executablePath,
         WindowStyle = ProcessWindowStyle.Hidden,
-        Arguments = $"e {escapedFileName} -o{clean}"
+        Arguments = $"e \"{escapedFileName}\" -o{clean}",
+        RedirectStandardError = true,
+        RedirectStandardOutput = true,
+        UseShellExecute = false,
       };
 
       var process = Process.Start(psi);
       process?.WaitForExit();
+
+      logConsoleOutput(process.StandardOutput.ReadToEnd());
+      logConsoleOutput(process.StandardError.ReadToEnd());
 
       if (!Directory.Exists(Path.Combine(wd, clean)))
       {
         throw new Exception("Extract failed");
       }
 
-      return clean;
+      return Path.Combine(wd, clean);
     }
 
     private string MakeCHD(string chdmanPath, string cuePath)

@@ -82,6 +82,11 @@ namespace PSCBuddy.UI
       => !string.IsNullOrWhiteSpace(this.SevenZPath) && !string.IsNullOrWhiteSpace(this.ArchivePath) &&
          !string.IsNullOrWhiteSpace(this.CHDManPath) && !string.IsNullOrWhiteSpace(this.TargetDirectory);
 
+    public void LogConsole(string message)
+    {
+      this.txtOutput.Text += Environment.NewLine + message;
+    }
+
     private void btnChdMan_Click(object sender, EventArgs e)
     {
       using (var fd = new OpenFileDialog())

@@ -41,5 +41,6 @@
     void ShowMessage(string message);
     void ShowError(string error);
     bool IsValid { get; }
+    void LogConsole(string message);
   }
 }
