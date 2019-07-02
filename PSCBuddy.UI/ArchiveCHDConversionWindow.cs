@@ -7,15 +7,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using PSCBuddy.Behaviors.Presenters;
 using PSCBuddy.Behaviors.Views;
 
 namespace PSCBuddy.UI
 {
   public partial class ArchiveCHDConversionWindow : Form, IArchiveCHDConversionView
   {
+    private readonly ArchiveCHDConversionPresenter presenter;
+
     public ArchiveCHDConversionWindow()
     {
       this.InitializeComponent();
+      this.presenter = new ArchiveCHDConversionPresenter(this);
     }
 
     public string CHDManPath
@@ -61,14 +65,7 @@ namespace PSCBuddy.UI
 
     public void ToggleProgress(bool inProgress)
     {
-      if (inProgress)
-      {
-        this.prgWork.Style = ProgressBarStyle.Marquee;
-      }
-      else
-      {
-        this.prgWork.Style = ProgressBarStyle.Continuous;
-      }
+      this.prgWork.Style = inProgress ? ProgressBarStyle.Marquee : ProgressBarStyle.Continuous;
     }
 
     public void ShowMessage(string message)
@@ -81,7 +78,9 @@ namespace PSCBuddy.UI
       MessageBox.Show(error, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
     }
 
-    public bool IsValid { get; }
+    public bool IsValid
+      => !string.IsNullOrWhiteSpace(this.SevenZPath) && !string.IsNullOrWhiteSpace(this.ArchivePath) &&
+         !string.IsNullOrWhiteSpace(this.CHDManPath) && !string.IsNullOrWhiteSpace(this.TargetDirectory);
 
     private void btnChdMan_Click(object sender, EventArgs e)
     {
@@ -136,9 +135,14 @@ namespace PSCBuddy.UI
         var result = fbd.ShowDialog();
         if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
         {
-          this.ArchivePath = fbd.SelectedPath;
+          this.TargetDirectory = fbd.SelectedPath;
         }
       }
+    }
+
+    private void btnGo_Click(object sender, EventArgs e)
+    {
+      this.presenter.ArchiveToCHD();
     }
   }
 }

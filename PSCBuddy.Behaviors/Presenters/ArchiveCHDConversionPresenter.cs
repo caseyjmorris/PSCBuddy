@@ -19,6 +19,7 @@ namespace PSCBuddy.Behaviors.Presenters
 
     public void ArchiveToCHD()
     {
+      this.settingsManager.SavePSXArchiveCHDSettings(this.view);
       if (!this.view.IsValid)
       {
         this.view.ShowError("Please fill in all fields");

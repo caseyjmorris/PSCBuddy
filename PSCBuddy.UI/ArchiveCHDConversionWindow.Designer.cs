@@ -139,6 +139,7 @@
       this.btnGo.TabIndex = 10;
       this.btnGo.Text = "Go";
       this.btnGo.UseVisualStyleBackColor = true;
+      this.btnGo.Click += new System.EventHandler(this.btnGo_Click);
       // 
       // prgWork
       // 

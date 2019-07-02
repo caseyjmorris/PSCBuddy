@@ -122,7 +122,7 @@ namespace PSCBuddy.Behaviors.Utils
       {
         throw new ArgumentException("Archive not found", nameof(archivePath));
       }
-      if (Path.GetExtension(archivePath)?.ToLowerInvariant() != "7z")
+      if (Path.GetExtension(archivePath)?.ToLowerInvariant() != ".7z")
       {
         throw new ArgumentException("Not a 7z archive", nameof(archivePath));
       }
