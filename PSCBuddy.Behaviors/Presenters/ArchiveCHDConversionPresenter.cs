@@ -9,11 +9,12 @@ namespace PSCBuddy.Behaviors.Presenters
   public class ArchiveCHDConversionPresenter
   {
     private readonly IArchiveCHDConversionView view;
+    private readonly SettingsManager settingsManager = new SettingsManager();
 
     public ArchiveCHDConversionPresenter(IArchiveCHDConversionView view)
     {
       this.view = view;
-      this.view.LoadScreen();
+      this.settingsManager.LoadPSXArchiveCHDSettings(this.view);
     }
 
     public void ArchiveToCHD()
@@ -28,7 +29,7 @@ namespace PSCBuddy.Behaviors.Presenters
       {
         this.view.ToggleControls(false);
         this.view.ToggleProgress(true);
-        this.view.SaveScreen();
+        this.settingsManager.SavePSXArchiveCHDSettings(this.view);
         var util = new PSXUtil();
         var chd = util.ArchiveToCHD(this.view.CHDManPath, this.view.SevenZPath, this.view.ArchivePath,
           this.view.ForceCueCreate, this.view.TargetDirectory, this.view.Cleanup);
