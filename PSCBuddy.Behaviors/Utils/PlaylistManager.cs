@@ -58,7 +58,10 @@ namespace PSCBuddy.Behaviors.Utils
 
       json.items = json.items.OrderBy(i => i.label).ToList();
 
-      File.WriteAllText(playlistPath, JsonConvert.SerializeObject(json, Formatting.Indented));
+      // Important:  can't handle CRLF
+      var jsonText = JsonConvert.SerializeObject(json, Formatting.Indented).Replace(Environment.NewLine, "\n");
+
+      File.WriteAllText(playlistPath, jsonText);
     }
 
     private string ConvertPath(string originalPath)
