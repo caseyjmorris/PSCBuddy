@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace PSCBuddy.Behaviors.Utils
 {
@@ -27,6 +28,9 @@ namespace PSCBuddy.Behaviors.Utils
         throw new Exception("no bin files found");
       }
 
+      var canonicalName = Regex.Replace(Path.GetFileNameWithoutExtension(binFiles.First()), @"\s*\(Track \d+\)\s*$",
+        string.Empty) + ".chd";
+
       if (cueCandidates.Any() && !forceCueCreate)
       {
         cueFile = cueCandidates.First();
@@ -48,7 +52,7 @@ namespace PSCBuddy.Behaviors.Utils
       }
 
       var chdLoc = this.MakeCHD(chdmanPath, cueFile, logConsoleOutput);
-      var targetLoc = Path.Combine(targetDirectory, Path.GetFileName(chdLoc));
+      var targetLoc = Path.Combine(targetDirectory, canonicalName);
 
       File.Move(chdLoc, targetLoc);
 
