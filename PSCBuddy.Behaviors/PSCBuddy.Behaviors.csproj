@@ -44,8 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JsonModels\PlaylistJson.cs" />
     <Compile Include="Presenters\ArchiveCHDConversionPresenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\PlaylistManager.cs" />
     <Compile Include="Utils\PSXUtil.cs" />
     <Compile Include="Utils\SettingsManager.cs" />
     <Compile Include="Views\ArchiveCHDConversionView.cs" />
