@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using PSCBuddy.Behaviors.JsonModels;
 
@@ -13,7 +11,7 @@ namespace PSCBuddy.Behaviors.Utils
   public class PlaylistManager
   {
     public void UpdatePlaylist(string driveRoot, string playlistName, IEnumerable<string> gamePaths,
-      string corePath = "DETECT", string coreName = "DETECT")
+      string corePath = "DETECT", string coreName = "DETECT", bool overwrite = false)
     {
       if (!driveRoot.EndsWith("\\"))
       {
@@ -28,7 +26,7 @@ namespace PSCBuddy.Behaviors.Utils
       var playlistPath = Path.Combine(playlistDirectory, playlistName + ".lpl");
       PlaylistJson json;
 
-      if (File.Exists(playlistPath))
+      if (File.Exists(playlistPath) && !overwrite)
       {
         json = JsonConvert.DeserializeObject<PlaylistJson>(File.ReadAllText(playlistPath));
       }
