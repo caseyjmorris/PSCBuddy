@@ -16,9 +16,6 @@ namespace PSCBuddy.UI
     [STAThread]
     private static void Main()
     {
-      //var pm = new PlaylistManager();
-      //pm.UpdatePlaylist("L:", "PSX CHD", Directory.GetFiles(@"L:\roms\PSX CHD"),
-      //  "/media/bleemsync/opt/retroarch/.config/retroarch/cores/pcsx_rearmed_libretro.so", "PCSX ReARMed");
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);
       Application.Run(new ArchiveCHDConversionWindow());

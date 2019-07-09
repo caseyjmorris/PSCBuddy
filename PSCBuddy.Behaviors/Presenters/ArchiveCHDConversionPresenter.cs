@@ -31,7 +31,7 @@ namespace PSCBuddy.Behaviors.Presenters
         this.view.ToggleControls(false);
         this.view.ToggleProgress(true);
         this.settingsManager.SavePSXArchiveCHDSettings(this.view);
-        var util = new PSXUtil();
+        var util = new PSXUtil(new PlaylistManager());
         var chd = util.ArchiveToCHD(this.view.CHDManPath, this.view.SevenZPath, this.view.ArchivePath,
           this.view.ForceCueCreate, this.view.TargetDirectory, this.view.Cleanup, this.view.LogConsole);
         this.view.ShowMessage("CHD created!");

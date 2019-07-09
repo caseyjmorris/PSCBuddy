@@ -10,6 +10,17 @@ namespace PSCBuddy.Behaviors.Utils
 {
   public class PSXUtil
   {
+    private readonly PlaylistManager playlistManager;
+    private const string CoreName = "PCSX ReARMed";
+
+    private const string CoreLocation =
+      "/media/bleemsync/opt/retroarch/.config/retroarch/cores/pcsx_rearmed_libretro.so";
+
+    public PSXUtil(PlaylistManager playlistManager)
+    {
+      this.playlistManager = playlistManager;
+    }
+
     public string ArchiveToCHD(string chdmanPath, string sevenZPath, string archivePath, bool forceCueCreate,
       string targetDirectory, bool cleanup, Action<string> logConsoleOutput)
     {
@@ -60,6 +71,11 @@ namespace PSCBuddy.Behaviors.Utils
       {
         Directory.Delete(unzipped, true);
       }
+
+      var playlistName = targetDirectory.Split('\\').Last();
+      var driveLetter = targetDirectory.Split(':').First() + ":\\";
+      this.playlistManager.TryUpdatePlaylist(driveLetter, playlistName, new[] {targetLoc},
+        CoreLocation, CoreName);
 
       return targetLoc;
     }

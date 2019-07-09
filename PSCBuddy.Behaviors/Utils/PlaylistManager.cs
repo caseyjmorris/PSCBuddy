@@ -10,7 +10,7 @@ namespace PSCBuddy.Behaviors.Utils
 {
   public class PlaylistManager
   {
-    public void UpdatePlaylist(string driveRoot, string playlistName, IEnumerable<string> gamePaths,
+    public bool TryUpdatePlaylist(string driveRoot, string playlistName, IEnumerable<string> gamePaths,
       string corePath = "DETECT", string coreName = "DETECT", bool overwrite = false)
     {
       if (!driveRoot.EndsWith("\\"))
@@ -20,7 +20,7 @@ namespace PSCBuddy.Behaviors.Utils
       var playlistDirectory = Path.Combine(driveRoot, @"bleemsync\opt\retroarch\.config\retroarch\playlists");
       if (!Directory.Exists(playlistDirectory))
       {
-        throw new ArgumentException("Drive does not exist or is not RetroArch drive", nameof(driveRoot));
+        return false;
       }
 
       var playlistPath = Path.Combine(playlistDirectory, playlistName + ".lpl");
@@ -60,6 +60,8 @@ namespace PSCBuddy.Behaviors.Utils
       var jsonText = JsonConvert.SerializeObject(json, Formatting.Indented).Replace(Environment.NewLine, "\n");
 
       File.WriteAllText(playlistPath, jsonText);
+
+      return true;
     }
 
     private string ConvertPath(string originalPath)
