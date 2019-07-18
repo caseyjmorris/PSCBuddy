@@ -125,10 +125,11 @@ namespace PSCBuddy.UI
         fd.FileName = this.ArchivePath;
         fd.Filter = "PSX game|*.7z";
         fd.CheckFileExists = true;
+        fd.Multiselect = true;
         var result = fd.ShowDialog();
         if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fd.FileName))
         {
-          this.ArchivePath = fd.FileName;
+          this.ArchivePath = string.Join(";", fd.FileNames.OrderBy(f => f));
         }
       }
     }

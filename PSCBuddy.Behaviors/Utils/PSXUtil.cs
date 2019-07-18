@@ -28,6 +28,45 @@ namespace PSCBuddy.Behaviors.Utils
       {
         throw new ArgumentException("Directory does not exist", nameof(targetDirectory));
       }
+      var discs = archivePath.Split(';').Where(n => !string.IsNullOrWhiteSpace(n)).ToList();
+
+      if (discs.Count == 0 || discs.Any(d => !File.Exists(d)))
+      {
+        throw new FileNotFoundException("Couldn't find file");
+      }
+
+      var discLocations =
+        discs.Select(
+          d =>
+            this.ArchiveIndividualDiscToCHD(chdmanPath, sevenZPath, d, forceCueCreate, targetDirectory, cleanup,
+              logConsoleOutput));
+
+      var playlistName = targetDirectory.Split('\\').Last();
+      var driveLetter = targetDirectory.Split(':').First() + ":\\";
+
+      if (discs.Count > 1)
+      {
+        string m3uName;
+        var m3uText = M3UBuilder.GetM3UText(discLocations, out m3uName);
+        var m3uTarget = Path.Combine(targetDirectory, m3uName);
+        File.WriteAllText(m3uTarget, m3uText);
+        this.playlistManager.TryUpdatePlaylist(driveLetter, playlistName, new[] {m3uTarget},
+          CoreLocation, CoreName);
+        return m3uTarget;
+      }
+      else
+      {
+        var disc = discs.Single();
+        this.playlistManager.TryUpdatePlaylist(driveLetter, playlistName, new[] {disc},
+          CoreLocation, CoreName);
+        return disc;
+      }
+    }
+
+    private string ArchiveIndividualDiscToCHD(string chdmanPath, string sevenZPath, string archivePath,
+      bool forceCueCreate,
+      string targetDirectory, bool cleanup, Action<string> logConsoleOutput)
+    {
       var unzipped = this.Extract7zArchive(sevenZPath, archivePath, logConsoleOutput);
 
       var cueCandidates = this.FindCueFiles(unzipped).ToArray();
@@ -71,11 +110,6 @@ namespace PSCBuddy.Behaviors.Utils
       {
         Directory.Delete(unzipped, true);
       }
-
-      var playlistName = targetDirectory.Split('\\').Last();
-      var driveLetter = targetDirectory.Split(':').First() + ":\\";
-      this.playlistManager.TryUpdatePlaylist(driveLetter, playlistName, new[] {targetLoc},
-        CoreLocation, CoreName);
 
       return targetLoc;
     }
