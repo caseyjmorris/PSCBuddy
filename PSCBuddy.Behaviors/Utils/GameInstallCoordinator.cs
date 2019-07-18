@@ -3,21 +3,19 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
+using PSCBuddy.Behaviors.Utils.Systems;
 
 namespace PSCBuddy.Behaviors.Utils
 {
-  public class PSXUtil
+  public class GameInstallCoordinator
   {
     private readonly PlaylistManager playlistManager;
-    private const string CoreName = "PCSX ReARMed";
+    private readonly ISystem system;
 
-    private const string CoreLocation =
-      "/media/bleemsync/opt/retroarch/.config/retroarch/cores/pcsx_rearmed_libretro.so";
-
-    public PSXUtil(PlaylistManager playlistManager)
+    public GameInstallCoordinator(PlaylistManager playlistManager, ISystem system)
     {
+      this.system = system;
       this.playlistManager = playlistManager;
     }
 
@@ -51,14 +49,14 @@ namespace PSCBuddy.Behaviors.Utils
         var m3uTarget = Path.Combine(targetDirectory, m3uName);
         File.WriteAllText(m3uTarget, m3uText);
         this.playlistManager.TryUpdatePlaylist(driveLetter, playlistName, new[] {m3uTarget},
-          CoreLocation, CoreName);
+          this.system.CoreLocation, this.system.CoreName);
         return m3uTarget;
       }
       else
       {
         var disc = discs.Single();
         this.playlistManager.TryUpdatePlaylist(driveLetter, playlistName, new[] {disc},
-          CoreLocation, CoreName);
+          this.system.CoreLocation, this.system.CoreName);
         return disc;
       }
     }
@@ -96,7 +94,7 @@ namespace PSCBuddy.Behaviors.Utils
 
       if (!cueCandidates.Any())
       {
-        var cueFileText = this.GetPSXCueSheet(binFiles);
+        var cueFileText = this.system.GetPlaylistText(binFiles);
         cueFile = Path.Combine(unzipped, GetScrubbedFileName(binFiles[0]) + ".cue");
         File.WriteAllText(cueFile, cueFileText);
       }
@@ -117,54 +115,6 @@ namespace PSCBuddy.Behaviors.Utils
     private IEnumerable<string> FindCueFiles(string path)
       =>
         Directory.GetFiles(path).Where(f => Path.GetExtension(f).ToLowerInvariant() == ".cue");
-
-
-    private string GetPSXCueSheet(IList<string> tracks)
-    {
-      if (tracks.Count == 0)
-      {
-        throw new ArgumentException("No tracks", nameof(tracks));
-      }
-      /* 
-      Sample
-        FILE "Primal Rage (USA) (Track 04).bin" BINARY
-          TRACK 01 MODE2/2352
-            INDEX 01 00:00:00
-        FILE "Primal Rage (USA) (Track 05).bin" BINARY
-          TRACK 02 AUDIO
-            INDEX 00 00:00:00
-            INDEX 01 00:02:00
-        FILE "Primal Rage (USA) (Track 06).bin" BINARY
-          TRACK 03 AUDIO
-            INDEX 00 00:00:00
-            INDEX 01 00:02:00
-      */
-
-      var sb = new StringBuilder();
-      for (var i = 0; i < tracks.Count; i++)
-      {
-        if (tracks[i].Contains('"'))
-        {
-          throw new ArgumentException("Track name cannot contain quotation mark", nameof(tracks));
-        }
-        if (i == 0)
-        {
-          sb.AppendLine($"FILE \"{tracks[0]}\" BINARY")
-            .AppendLine("  TRACK 01 MODE2/2352")
-            .AppendLine("    INDEX 01 00:00:00");
-        }
-
-        else
-        {
-          sb.AppendLine($"FILE \"{tracks[i]}\" BINARY")
-            .AppendLine($"  TRACK {i + 1:D2} AUDIO")
-            .AppendLine("    INDEX 00 00:00:00")
-            .AppendLine("    INDEX 01 00:02:00");
-        }
-      }
-
-      return sb.ToString();
-    }
 
     private string Extract7zArchive(string executablePath, string archivePath, Action<string> logConsoleOutput)
     {

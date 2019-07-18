@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using PSCBuddy.Behaviors.Utils;
+using PSCBuddy.Behaviors.Utils.Systems;
 using PSCBuddy.Behaviors.Views;
 
 namespace PSCBuddy.Behaviors.Presenters
@@ -31,7 +32,7 @@ namespace PSCBuddy.Behaviors.Presenters
         this.view.ToggleControls(false);
         this.view.ToggleProgress(true);
         this.settingsManager.SavePSXArchiveCHDSettings(this.view);
-        var util = new PSXUtil(new PlaylistManager());
+        var util = new GameInstallCoordinator(new PlaylistManager(), Playstation.Instance);
         var chd = util.ArchiveToCHD(this.view.CHDManPath, this.view.SevenZPath, this.view.ArchivePath,
           this.view.ForceCueCreate, this.view.TargetDirectory, this.view.Cleanup, this.view.LogConsole);
         this.view.ShowMessage("CHD created!");
