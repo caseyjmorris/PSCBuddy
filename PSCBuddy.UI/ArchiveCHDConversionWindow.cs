@@ -25,38 +25,38 @@ namespace PSCBuddy.UI
 
     public string CHDManPath
     {
-      get { return this.txtCHDManLoc.Text; }
-      set { this.txtCHDManLoc.Text = value; }
+      get => this.txtCHDManLoc.Text;
+      set => this.txtCHDManLoc.Text = value;
     }
 
     public string SevenZPath
     {
-      get { return this.txt7zLoc.Text; }
-      set { this.txt7zLoc.Text = value; }
+      get => this.txt7zLoc.Text;
+      set => this.txt7zLoc.Text = value;
     }
 
     public string ArchivePath
     {
-      get { return this.txtArchiveLoc.Text; }
-      set { this.txtArchiveLoc.Text = value; }
+      get => this.txtArchiveLoc.Text;
+      set => this.txtArchiveLoc.Text = value;
     }
 
     public bool ForceCueCreate
     {
-      get { return this.checkForceCue.Checked; }
-      set { this.checkForceCue.Checked = value; }
+      get => this.checkForceCue.Checked;
+      set => this.checkForceCue.Checked = value;
     }
 
     public string TargetDirectory
     {
-      get { return this.txtTargetLoc.Text; }
-      set { this.txtTargetLoc.Text = value; }
+      get => this.txtTargetLoc.Text;
+      set => this.txtTargetLoc.Text = value;
     }
 
     public bool Cleanup
     {
-      get { return this.checkCleanup.Checked; }
-      set { this.checkCleanup.Checked = value; }
+      get => this.checkCleanup.Checked;
+      set => this.checkCleanup.Checked = value;
     }
 
     public void ToggleControls(bool enabled)
