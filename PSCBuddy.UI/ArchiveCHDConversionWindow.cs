@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using PSCBuddy.Behaviors.Presenters;
 using PSCBuddy.Behaviors.Utils.Systems;
@@ -170,7 +164,7 @@ namespace PSCBuddy.UI
       using (var fd = new OpenFileDialog())
       {
         fd.FileName = this.ArchivePath;
-        fd.Filter = "PSX game|*.7z";
+        fd.Filter = "Game|*.7z;*.zip;*.rar";
         fd.CheckFileExists = true;
         fd.Multiselect = true;
         var result = fd.ShowDialog();

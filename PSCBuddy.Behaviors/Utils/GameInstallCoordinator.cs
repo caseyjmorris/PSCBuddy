@@ -54,7 +54,7 @@ namespace PSCBuddy.Behaviors.Utils
       }
       else
       {
-        var disc = discs.Single();
+        var disc = discLocations.Single();
         this.playlistManager.TryUpdatePlaylist(driveLetter, playlistName, new[] {disc},
           this.system.CoreLocation, this.system.CoreName);
         return disc;
@@ -70,14 +70,16 @@ namespace PSCBuddy.Behaviors.Utils
       var cueCandidates = this.FindCueFiles(unzipped).ToArray();
       var cueFile = string.Empty;
       var binFiles =
-        Directory.GetFiles(unzipped).Where(f => Path.GetExtension(f).ToLowerInvariant() == ".bin").ToArray();
+        Directory.GetFiles(unzipped).Where(f =>
+            Path.GetExtension(f).ToLowerInvariant() == ".bin" || Path.GetExtension(f).ToLowerInvariant() == ".iso")
+          .ToArray();
       if (!binFiles.Any())
       {
-        throw new Exception("no bin files found");
+        throw new Exception("No bin or iso files found");
       }
 
       var canonicalName = Regex.Replace(Path.GetFileNameWithoutExtension(binFiles.First()), @"\s*\(Track \d+\)\s*$",
-        string.Empty) + ".chd";
+        string.Empty).Replace("_", " ") + ".chd";
 
       var forceCueRewritableSystem = this.system as IForceCueRewritableSystem;
 
@@ -132,7 +134,9 @@ namespace PSCBuddy.Behaviors.Utils
       {
         throw new ArgumentException("Archive not found", nameof(archivePath));
       }
-      if (Path.GetExtension(archivePath)?.ToLowerInvariant() != ".7z")
+
+      var ext = Path.GetExtension(archivePath)?.ToLowerInvariant();
+      if (ext != ".7z" && ext != ".zip" && ext !=".rar")
       {
         throw new ArgumentException("Not a 7z archive", nameof(archivePath));
       }
