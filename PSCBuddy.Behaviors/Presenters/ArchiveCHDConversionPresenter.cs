@@ -38,7 +38,7 @@ namespace PSCBuddy.Behaviors.Presenters
         this.view.ToggleControls(false);
         this.view.ToggleProgress(true);
         SettingsManager.SaveArchiveChdSettings(this.view);
-        var util = new GameInstallCoordinator(new PlaylistManager(), Playstation.Instance);
+        var util = new GameInstallCoordinator(new PlaylistManager(), this.view.SelectedSystem);
         var chd = util.ArchiveToCHD(this.view.CHDManPath, this.view.SevenZPath, this.view.ArchivePath,
           this.view.ForceCueCreate, this.view.TargetDirectory, this.view.Cleanup, this.view.LogConsole);
         this.view.ShowMessage("CHD created!");
