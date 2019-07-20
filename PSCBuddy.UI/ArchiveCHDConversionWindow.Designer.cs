@@ -69,7 +69,7 @@
       this.lbl7zLoc.TabIndex = 3;
       this.lbl7zLoc.Text = "7z location";
       this.lbl7zLoc.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-      this.txtArchiveLoc.Location = new System.Drawing.Point(114, 101);
+      this.txtArchiveLoc.Location = new System.Drawing.Point(114, 102);
       this.txtArchiveLoc.Name = "txtArchiveLoc";
       this.txtArchiveLoc.Size = new System.Drawing.Size(940, 23);
       this.txtArchiveLoc.TabIndex = 4;
@@ -110,7 +110,7 @@
       this.btnGo.Text = "Go";
       this.btnGo.UseVisualStyleBackColor = true;
       this.btnGo.Click += new System.EventHandler(this.btnGo_Click);
-      this.prgWork.Location = new System.Drawing.Point(12, 229);
+      this.prgWork.Location = new System.Drawing.Point(12, 228);
       this.prgWork.Name = "prgWork";
       this.prgWork.Size = new System.Drawing.Size(1088, 27);
       this.prgWork.TabIndex = 11;
@@ -128,7 +128,7 @@
       this.btn7z.Text = "...";
       this.btn7z.UseVisualStyleBackColor = true;
       this.btn7z.Click += new System.EventHandler(this.btn7z_Click);
-      this.btnArchive.Location = new System.Drawing.Point(1063, 101);
+      this.btnArchive.Location = new System.Drawing.Point(1063, 102);
       this.btnArchive.Name = "btnArchive";
       this.btnArchive.Size = new System.Drawing.Size(37, 27);
       this.btnArchive.TabIndex = 14;

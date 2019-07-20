@@ -17,6 +17,13 @@ namespace PSCBuddy.Behaviors.Presenters
       SettingsManager.LoadArchiveChdSettings(this.view);
     }
 
+    public void HandleSystemChange()
+    {
+      SettingsManager.LoadArchiveChdSettings(this.view);
+      this.view.ToggleCanForceCue(
+        this.view.SelectedSystem is IForceCueRewritableSystem);
+    }
+
     public void ArchiveToCHD()
     {
       SettingsManager.SaveArchiveChdSettings(this.view);

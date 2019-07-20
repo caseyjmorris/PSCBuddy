@@ -24,6 +24,8 @@ namespace PSCBuddy.UI
       this.cmbSystemSelect.Items.AddRange(new object[]{"Playstation", "PC Engine CD", "Generic"});
       this.cmbSystemSelect.SelectedIndex = 0;
       this.presenter = new ArchiveCHDConversionPresenter(this);
+      this.cmbSystemSelect.DropDownStyle = ComboBoxStyle.DropDownList;
+      this.cmbSystemSelect.SelectedValueChanged += (o, ea) => this.presenter.HandleSystemChange();
     }
 
     public string CHDManPath
@@ -104,7 +106,7 @@ namespace PSCBuddy.UI
     {
       get
       {
-        switch (this.cmbSystemSelect.SelectedText)
+        switch (this.cmbSystemSelect.SelectedItem)
         {
           case "Playstation":
             return Playstation.Instance;
@@ -120,15 +122,15 @@ namespace PSCBuddy.UI
       {
         if (value == Playstation.Instance)
         {
-          this.cmbSystemSelect.SelectedText = "Playstation";
+          this.cmbSystemSelect.SelectedItem = "Playstation";
         }
         else if (value == PCEngineCD.Instance)
         {
-          this.cmbSystemSelect.SelectedText = "PC Engine CD";
+          this.cmbSystemSelect.SelectedItem = "PC Engine CD";
         }
         else
         {
-          this.cmbSystemSelect.SelectedText = "Generic";
+          this.cmbSystemSelect.SelectedItem = "Generic";
         }
       }
     }
