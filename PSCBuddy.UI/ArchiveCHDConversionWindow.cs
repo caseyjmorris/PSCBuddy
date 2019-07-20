@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PSCBuddy.Behaviors.Presenters;
+using PSCBuddy.Behaviors.Utils.Systems;
 using PSCBuddy.Behaviors.Views;
 
 namespace PSCBuddy.UI
@@ -19,8 +20,10 @@ namespace PSCBuddy.UI
     public ArchiveCHDConversionWindow()
     {
       this.InitializeComponent();
-      this.presenter = new ArchiveCHDConversionPresenter(this);
       CheckForIllegalCrossThreadCalls = false;
+      this.cmbSystemSelect.Items.AddRange(new object[]{"Playstation", "PC Engine CD", "Generic"});
+      this.cmbSystemSelect.SelectedIndex = 0;
+      this.presenter = new ArchiveCHDConversionPresenter(this);
     }
 
     public string CHDManPath
@@ -86,6 +89,48 @@ namespace PSCBuddy.UI
     public void LogConsole(string message)
     {
       this.txtOutput.Text += Environment.NewLine + message;
+    }
+
+    public void ToggleCanForceCue(bool enabled)
+    {
+      this.checkForceCue.Enabled = enabled;
+      if (!enabled)
+      {
+        this.checkForceCue.Checked = false;
+      }
+    }
+
+    public ISystem SelectedSystem
+    {
+      get
+      {
+        switch (this.cmbSystemSelect.SelectedText)
+        {
+          case "Playstation":
+            return Playstation.Instance;
+          case "PC Engine CD":
+            return PCEngineCD.Instance;
+          case "Generic":
+            return GenericSystem.Instance;
+          default:
+            return GenericSystem.Instance;
+        }
+      }
+      set
+      {
+        if (value == Playstation.Instance)
+        {
+          this.cmbSystemSelect.SelectedText = "Playstation";
+        }
+        else if (value == PCEngineCD.Instance)
+        {
+          this.cmbSystemSelect.SelectedText = "PC Engine CD";
+        }
+        else
+        {
+          this.cmbSystemSelect.SelectedText = "Generic";
+        }
+      }
     }
 
     private void btnChdMan_Click(object sender, EventArgs e)

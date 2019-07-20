@@ -17,6 +17,7 @@ namespace PSCBuddy.Behaviors.Utils.Systems
     public string CoreName => "PCSX ReARMed";
 
     public string CoreLocation => "/media/bleemsync/opt/retroarch/.config/retroarch/cores/pcsx_rearmed_libretro.so";
+    public string SettingsFileName => "psxchdarchive.json";
 
     public string GetPlaylistText(IList<string> tracks)
     {

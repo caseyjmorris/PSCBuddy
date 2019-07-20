@@ -6,6 +6,7 @@ namespace PSCBuddy.Behaviors.Utils.Systems
   {
     string CoreName { get; }
     string CoreLocation { get; }
+    string SettingsFileName { get; }
   }
 
   public interface IForceCueRewritableSystem : ISystem

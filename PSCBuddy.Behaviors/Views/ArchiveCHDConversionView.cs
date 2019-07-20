@@ -1,4 +1,6 @@
-﻿namespace PSCBuddy.Behaviors.Views
+﻿using PSCBuddy.Behaviors.Utils.Systems;
+
+namespace PSCBuddy.Behaviors.Views
 {
   public interface IArchiveCHDConversionSettings
   {
@@ -42,5 +44,7 @@
     void ShowError(string error);
     bool IsValid { get; }
     void LogConsole(string message);
+    void ToggleCanForceCue(bool enabled);
+    ISystem SelectedSystem { get; set; }
   }
 }
