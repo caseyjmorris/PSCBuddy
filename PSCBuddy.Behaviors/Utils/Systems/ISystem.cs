@@ -6,6 +6,10 @@ namespace PSCBuddy.Behaviors.Utils.Systems
   {
     string CoreName { get; }
     string CoreLocation { get; }
+  }
+
+  public interface IForceCueRewritableSystem : ISystem
+  {
     string GetPlaylistText(IList<string> tracks);
   }
 }

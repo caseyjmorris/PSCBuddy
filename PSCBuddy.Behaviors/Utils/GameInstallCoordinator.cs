@@ -79,7 +79,9 @@ namespace PSCBuddy.Behaviors.Utils
       var canonicalName = Regex.Replace(Path.GetFileNameWithoutExtension(binFiles.First()), @"\s*\(Track \d+\)\s*$",
         string.Empty) + ".chd";
 
-      if (cueCandidates.Any() && !forceCueCreate)
+      var forceCueRewritableSystem = this.system as IForceCueRewritableSystem;
+
+      if (cueCandidates.Any() && (!forceCueCreate || forceCueRewritableSystem == null))
       {
         cueFile = cueCandidates.First();
       }
@@ -92,11 +94,15 @@ namespace PSCBuddy.Behaviors.Utils
         cueCandidates = Array.Empty<string>();
       }
 
-      if (!cueCandidates.Any())
+      if (!cueCandidates.Any() && forceCueRewritableSystem != null)
       {
-        var cueFileText = this.system.GetPlaylistText(binFiles);
+        var cueFileText = forceCueRewritableSystem.GetPlaylistText(binFiles);
         cueFile = Path.Combine(unzipped, GetScrubbedFileName(binFiles[0]) + ".cue");
         File.WriteAllText(cueFile, cueFileText);
+      }
+      else if (!cueCandidates.Any() && forceCueRewritableSystem == null)
+      {
+        throw new Exception("No CUE file found!");
       }
 
       var chdLoc = this.MakeCHD(chdmanPath, cueFile, logConsoleOutput);

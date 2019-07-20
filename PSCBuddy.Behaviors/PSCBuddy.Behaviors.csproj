@@ -51,7 +51,9 @@
     <Compile Include="Utils\PlaylistManager.cs" />
     <Compile Include="Utils\GameInstallCoordinator.cs" />
     <Compile Include="Utils\SettingsManager.cs" />
+    <Compile Include="Utils\Systems\GenericSystem.cs" />
     <Compile Include="Utils\Systems\ISystem.cs" />
+    <Compile Include="Utils\Systems\PCEngineCD.cs" />
     <Compile Include="Utils\Systems\Playstation.cs" />
     <Compile Include="Views\ArchiveCHDConversionView.cs" />
   </ItemGroup>

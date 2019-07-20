@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PSCBuddy.Behaviors.Utils.Systems
 {
-  public class Playstation : ISystem
+  public class Playstation : IForceCueRewritableSystem
   {
     private static readonly Lazy<Playstation> InternalInstance = new Lazy<Playstation>(() => new Playstation());
     public static Playstation Instance => InternalInstance.Value;
