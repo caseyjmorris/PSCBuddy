@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using PSCBuddy.Behaviors.Utils;
+using PSCBuddy.Behaviors.Utils.Systems;
 using PSCBuddy.Behaviors.Views;
 
 namespace PSCBuddy.Behaviors.Presenters
@@ -9,17 +10,23 @@ namespace PSCBuddy.Behaviors.Presenters
   public class ArchiveCHDConversionPresenter
   {
     private readonly IArchiveCHDConversionView view;
-    private readonly SettingsManager settingsManager = new SettingsManager();
 
     public ArchiveCHDConversionPresenter(IArchiveCHDConversionView view)
     {
       this.view = view;
-      this.settingsManager.LoadPSXArchiveCHDSettings(this.view);
+      SettingsManager.LoadArchiveChdSettings(this.view);
+    }
+
+    public void HandleSystemChange()
+    {
+      SettingsManager.LoadArchiveChdSettings(this.view);
+      this.view.ToggleCanForceCue(
+        this.view.SelectedSystem is IForceCueRewritableSystem);
     }
 
     public void ArchiveToCHD()
     {
-      this.settingsManager.SavePSXArchiveCHDSettings(this.view);
+      SettingsManager.SaveArchiveChdSettings(this.view);
       if (!this.view.IsValid)
       {
         this.view.ShowError("Please fill in all fields");
@@ -30,8 +37,8 @@ namespace PSCBuddy.Behaviors.Presenters
       {
         this.view.ToggleControls(false);
         this.view.ToggleProgress(true);
-        this.settingsManager.SavePSXArchiveCHDSettings(this.view);
-        var util = new PSXUtil(new PlaylistManager());
+        SettingsManager.SaveArchiveChdSettings(this.view);
+        var util = new GameInstallCoordinator(new PlaylistManager(), Playstation.Instance);
         var chd = util.ArchiveToCHD(this.view.CHDManPath, this.view.SevenZPath, this.view.ArchivePath,
           this.view.ForceCueCreate, this.view.TargetDirectory, this.view.Cleanup, this.view.LogConsole);
         this.view.ShowMessage("CHD created!");

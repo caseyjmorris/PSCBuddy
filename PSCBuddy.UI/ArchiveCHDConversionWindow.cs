@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PSCBuddy.Behaviors.Presenters;
+using PSCBuddy.Behaviors.Utils.Systems;
 using PSCBuddy.Behaviors.Views;
 
 namespace PSCBuddy.UI
@@ -19,44 +20,48 @@ namespace PSCBuddy.UI
     public ArchiveCHDConversionWindow()
     {
       this.InitializeComponent();
-      this.presenter = new ArchiveCHDConversionPresenter(this);
       CheckForIllegalCrossThreadCalls = false;
+      this.cmbSystemSelect.Items.AddRange(new object[]{"Playstation", "PC Engine CD", "Generic"});
+      this.cmbSystemSelect.SelectedIndex = 0;
+      this.presenter = new ArchiveCHDConversionPresenter(this);
+      this.cmbSystemSelect.DropDownStyle = ComboBoxStyle.DropDownList;
+      this.cmbSystemSelect.SelectedValueChanged += (o, ea) => this.presenter.HandleSystemChange();
     }
 
     public string CHDManPath
     {
-      get { return this.txtCHDManLoc.Text; }
-      set { this.txtCHDManLoc.Text = value; }
+      get => this.txtCHDManLoc.Text;
+      set => this.txtCHDManLoc.Text = value;
     }
 
     public string SevenZPath
     {
-      get { return this.txt7zLoc.Text; }
-      set { this.txt7zLoc.Text = value; }
+      get => this.txt7zLoc.Text;
+      set => this.txt7zLoc.Text = value;
     }
 
     public string ArchivePath
     {
-      get { return this.txtArchiveLoc.Text; }
-      set { this.txtArchiveLoc.Text = value; }
+      get => this.txtArchiveLoc.Text;
+      set => this.txtArchiveLoc.Text = value;
     }
 
     public bool ForceCueCreate
     {
-      get { return this.checkForceCue.Checked; }
-      set { this.checkForceCue.Checked = value; }
+      get => this.checkForceCue.Checked;
+      set => this.checkForceCue.Checked = value;
     }
 
     public string TargetDirectory
     {
-      get { return this.txtTargetLoc.Text; }
-      set { this.txtTargetLoc.Text = value; }
+      get => this.txtTargetLoc.Text;
+      set => this.txtTargetLoc.Text = value;
     }
 
     public bool Cleanup
     {
-      get { return this.checkCleanup.Checked; }
-      set { this.checkCleanup.Checked = value; }
+      get => this.checkCleanup.Checked;
+      set => this.checkCleanup.Checked = value;
     }
 
     public void ToggleControls(bool enabled)
@@ -86,6 +91,48 @@ namespace PSCBuddy.UI
     public void LogConsole(string message)
     {
       this.txtOutput.Text += Environment.NewLine + message;
+    }
+
+    public void ToggleCanForceCue(bool enabled)
+    {
+      this.checkForceCue.Enabled = enabled;
+      if (!enabled)
+      {
+        this.checkForceCue.Checked = false;
+      }
+    }
+
+    public ISystem SelectedSystem
+    {
+      get
+      {
+        switch (this.cmbSystemSelect.SelectedItem)
+        {
+          case "Playstation":
+            return Playstation.Instance;
+          case "PC Engine CD":
+            return PCEngineCD.Instance;
+          case "Generic":
+            return GenericSystem.Instance;
+          default:
+            return GenericSystem.Instance;
+        }
+      }
+      set
+      {
+        if (value == Playstation.Instance)
+        {
+          this.cmbSystemSelect.SelectedItem = "Playstation";
+        }
+        else if (value == PCEngineCD.Instance)
+        {
+          this.cmbSystemSelect.SelectedItem = "PC Engine CD";
+        }
+        else
+        {
+          this.cmbSystemSelect.SelectedItem = "Generic";
+        }
+      }
     }
 
     private void btnChdMan_Click(object sender, EventArgs e)
