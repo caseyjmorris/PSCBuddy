@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 using Newtonsoft.Json;
 using PSCBuddy.Behaviors.JsonModels;
 
@@ -11,8 +12,11 @@ namespace PSCBuddy.Behaviors.Utils
   public class PlaylistManager
   {
     public bool TryUpdatePlaylist(string driveRoot, string playlistName, IEnumerable<string> gamePaths,
-      string corePath = "DETECT", string coreName = "DETECT", bool overwrite = false)
+      string corePath = "DETECT", string coreName = "DETECT", bool overwrite = false, string readableNameXml = null)
     {
+      var nameLookup = readableNameXml != null
+        ? GetReadableNameDictionary(readableNameXml)
+        : new Dictionary<string, string>();
       if (!driveRoot.EndsWith("\\"))
       {
         driveRoot += "\\";
@@ -41,12 +45,17 @@ namespace PSCBuddy.Behaviors.Utils
 
       foreach (var gamePath in gamePaths)
       {
+        var cleanFileName = Path.GetFileNameWithoutExtension(gamePath);
+        if (cleanFileName == null)
+        {
+          throw new InvalidOperationException("Passed file with no name (?)");
+        }
         var item = new PlaylistItemJson
         {
           core_name = coreName,
           core_path = corePath,
           db_name = $"{playlistName}.lpl",
-          label = Path.GetFileNameWithoutExtension(gamePath),
+          label = nameLookup.TryGetValue(cleanFileName, out var title) ? title : cleanFileName,
           path = this.ConvertPath(gamePath),
           crc32 = "DETECT",
         };
@@ -62,6 +71,20 @@ namespace PSCBuddy.Behaviors.Utils
       File.WriteAllText(playlistPath, jsonText);
 
       return true;
+    }
+
+    private static Dictionary<string, string> GetReadableNameDictionary(string xml)
+    {
+      var xdoc = XDocument.Parse(xml);
+      if (xdoc.Root == null)
+      {
+        throw new Exception("Bad XML");
+      }
+      var ns = xdoc.Root.GetDefaultNamespace();
+      var nameDesc = xdoc.Root.Descendants(ns + "game");
+      var results = nameDesc.Select(nd => new
+        {name = nd.Attribute(ns + "name").Value, description = nd.Descendants(ns + "description").Single().Value});
+      return results.ToDictionary(x => x.name, x => x.description);
     }
 
     private string ConvertPath(string originalPath)
