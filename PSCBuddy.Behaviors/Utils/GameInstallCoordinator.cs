@@ -10,10 +10,10 @@ namespace PSCBuddy.Behaviors.Utils
 {
   public class GameInstallCoordinator
   {
-    private readonly PlaylistManager playlistManager;
+    private readonly IPlaylistManager playlistManager;
     private readonly ISystem system;
 
-    public GameInstallCoordinator(PlaylistManager playlistManager, ISystem system)
+    public GameInstallCoordinator(IPlaylistManager playlistManager, ISystem system)
     {
       this.system = system;
       this.playlistManager = playlistManager;

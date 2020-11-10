@@ -9,7 +9,7 @@ using PSCBuddy.Behaviors.JsonModels;
 
 namespace PSCBuddy.Behaviors.Utils
 {
-  public class PlaylistManager
+  public class PlaylistManager : IPlaylistManager
   {
     public bool TryUpdatePlaylist(string driveRoot, string playlistName, IEnumerable<string> gamePaths,
       string corePath = "DETECT", string coreName = "DETECT", bool overwrite = false, string readableNameXml = null)
